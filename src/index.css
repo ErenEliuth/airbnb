@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FF385C;
+  --color-airbnb-dark: #222222;
+  --color-airbnb-gray: #717171;
+  --color-airbnb-border: #DDDDDD;
+}
+
+@layer base {
+  body {
+    @apply text-[#222222];
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+  }
+}
+
+/* Custom Utilities */
+.glass-effect {
+  @apply backdrop-blur-md bg-white/80 border border-white/20;
+}
+
+.airbnb-input {
+  @apply w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400;
+}
+
+.airbnb-button-primary {
+  @apply bg-[#FF385C] hover:bg-[#D80565] text-white font-bold py-3 px-6 rounded-lg transition-all active:scale-95 shadow-sm;
+}
+
+@keyframes slide-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: slide-in-up 0.4s ease-out forwards;
+}
+
+/* Calendar customization */
+.rdp-day_selected:not(.rdp-day_disabled) {
+  background-color: #222 !important;
+  color: white !important;
+}
+
+.rdp-day_range_middle:not(.rdp-day_disabled) {
+  background-color: #f3f4f6 !important;
+  color: #111 !important;
+  border-radius: 0 !important;
+}
+
+.rdp-day_disabled {
+  text-decoration: line-through !important;
+  color: #d1d5db !important;
+}
