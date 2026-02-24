@@ -106,7 +106,7 @@ export function Navbar() {
             <nav className="fixed w-full bg-white z-50 border-b border-gray-200 shadow-sm font-inherit">
 
                 {/* ─── DESKTOP HEADER ─── */}
-                <div className="hide-on-mobile">
+                <div className="hidden md:block">
                     {/* Row 1: Logo | Tabs | User */}
                     <div className="max-w-[2520px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-20">
                         <div className="flex justify-between items-center h-[80px]">
@@ -233,7 +233,7 @@ export function Navbar() {
                 </div>
 
                 {/* ─── MOBILE HEADER ─── */}
-                <div className="hide-on-desktop">
+                <div className="md:hidden">
                     {isHome ? (
                         <div className="pt-4 px-4 pb-4">
                             <div onClick={handleSearch} className="flex items-center bg-white border border-gray-200 rounded-full shadow-lg p-3 w-full active:scale-95 transition-transform duration-200">
