@@ -558,19 +558,8 @@ export function ListingDetails() {
                     </div>
                 </div>
 
-                {/* Map Section */}
-                <div className="py-16 border-t border-gray-100 mt-16">
-                    <h2 className="text-2xl font-bold text-[#222222] mb-8">A dónde irás</h2>
-                    <div className="w-full h-[550px] bg-gray-50 rounded-[32px] relative overflow-hidden shadow-inner border border-gray-100">
-                        <LeafletMap
-                            center={listing.lat && listing.lng ? [listing.lat, listing.lng] : null}
-                            zoom={15}
-                        />
-                    </div>
-                </div>
-
                 {/* Reviews Section */}
-                <div className="py-16 border-t border-gray-100">
+                <div id="reviews" className="py-16 border-t border-gray-100 mt-12">
                     <div className="flex items-center gap-2 text-2xl font-bold text-[#222222] mb-8">
                         <Star className="w-6 h-6 fill-black" />
                         <h2>{averageRating > 0 ? `${averageRating} · ${reviews.length} evaluaci${reviews.length === 1 ? 'ón' : 'ones'}` : 'Sin evaluaciones aún'}</h2>
@@ -578,84 +567,100 @@ export function ListingDetails() {
 
                     {/* Review Form */}
                     {user && !isOwner && (
-                        <div className="mb-12 bg-gray-50 p-6 rounded-2xl border border-gray-200">
-                            <h3 className="font-bold text-lg mb-4">Escribe una evaluación</h3>
-                            <form onSubmit={handleReviewSubmit} className="space-y-4">
-                                <div className="flex items-center gap-4">
-                                    <label className="text-sm font-semibold">Calificación:</label>
-                                    <div className="flex gap-1">
+                        <div className="mb-12 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
+                            <h3 className="font-bold text-xl mb-6">¿Qué te pareció tu estancia?</h3>
+                            <form onSubmit={handleReviewSubmit} className="space-y-6">
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-sm font-bold text-gray-700">Calificación general</label>
+                                    <div className="flex gap-2">
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <button
                                                 key={star}
                                                 type="button"
                                                 onClick={() => setNewReview({ ...newReview, rating: star })}
-                                                className="focus:outline-none transition-transform hover:scale-110"
+                                                className="focus:outline-none transition-transform hover:scale-125"
                                             >
                                                 <Star
-                                                    className={`w-6 h-6 ${star <= newReview.rating ? 'fill-black text-black' : 'text-gray-300'}`}
+                                                    size={32}
+                                                    className={`${star <= newReview.rating ? 'fill-black text-black' : 'text-gray-200'}`}
                                                 />
                                             </button>
                                         ))}
                                     </div>
                                 </div>
-                                <textarea
-                                    value={newReview.comment}
-                                    onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                                    placeholder="Cuéntales a otros huéspedes sobre tu estancia..."
-                                    className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none min-h-[100px] bg-white transition-all"
-                                />
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-sm font-bold text-gray-700">Comentario</label>
+                                    <textarea
+                                        value={newReview.comment}
+                                        onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                        placeholder="Escribe aquí tu experiencia..."
+                                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none min-h-[120px] bg-gray-50 transition-all resize-none"
+                                    />
+                                </div>
                                 <button
                                     type="submit"
                                     disabled={submittingReview}
-                                    className="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition active:scale-95 disabled:bg-gray-400"
+                                    className="bg-black text-white px-10 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg active:scale-95 disabled:bg-gray-400 disabled:shadow-none"
                                 >
-                                    {submittingReview ? 'Enviando...' : 'Enviar evaluación'}
+                                    {submittingReview ? 'Publicando...' : 'Publicar comentario'}
                                 </button>
                             </form>
                         </div>
                     )}
 
-                    {!user && (
-                        <div className="mb-12 bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
-                            <p className="text-gray-600">Debes iniciar sesión para calificar este alojamiento.</p>
+                    {isOwner && reviews.length === 0 && (
+                        <div className="mb-12 bg-rose-50 p-6 rounded-2xl border border-rose-100">
+                            <p className="text-rose-800 font-medium">Aquí aparecerán las evaluaciones que tus huéspedes dejen sobre este alojamiento.</p>
                         </div>
                     )}
 
                     {/* Reviews List */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
                         {reviews.map((rev) => (
                             <div key={rev.id} className="space-y-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">
+                                    <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center font-bold text-white shadow-md">
                                         {rev.user_id.substring(0, 1).toUpperCase()}
                                     </div>
                                     <div>
-                                        <div className="font-bold text-[#222222]">Usuario</div>
+                                        <div className="font-bold text-[#222222]">Huésped</div>
                                         <div className="text-sm text-gray-500">
                                             {format(new Date(rev.created_at), "MMMM 'de' yyyy", { locale: es })}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1 mb-1">
+                                <div className="flex items-center gap-1">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
-                                            className={`w-3 h-3 ${i < rev.rating ? 'fill-black text-black' : 'text-gray-300'}`}
+                                            size={12}
+                                            className={`${i < rev.rating ? 'fill-black text-black' : 'text-gray-200'}`}
                                         />
                                     ))}
                                 </div>
-                                <p className="text-[#222222] leading-relaxed">
+                                <p className="text-[#222222] leading-relaxed text-[15px]">
                                     {rev.comment}
                                 </p>
                             </div>
                         ))}
                     </div>
 
-                    {reviews.length === 0 && (
-                        <div className="text-center py-10">
-                            <p className="text-gray-400 italic">Aún no hay comentarios para este alojamiento. ¡Sé el primero en dejar uno!</p>
+                    {reviews.length === 0 && !isOwner && (
+                        <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                            <p className="text-gray-500 italic">Aún no hay comentarios. {user ? '¡Sé el primero en dejar uno!' : 'Inicia sesión para ser el primero en calificar.'}</p>
                         </div>
                     )}
+                </div>
+
+                {/* Map Section */}
+                <div className="py-16 border-t border-gray-100">
+                    <h2 className="text-2xl font-bold text-[#222222] mb-8">A dónde irás</h2>
+                    <div className="w-full h-[550px] bg-gray-50 rounded-[32px] relative overflow-hidden shadow-inner border border-gray-100">
+                        <LeafletMap
+                            center={listing.lat && listing.lng ? [listing.lat, listing.lng] : null}
+                            zoom={15}
+                        />
+                    </div>
                 </div>
 
             </main>
