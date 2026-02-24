@@ -51,8 +51,15 @@ export const AuthProvider = ({ children }) => {
 
     const signInWithGoogle = async () => {
         if (!supabase) throw new Error("Supabase no está configurado. Faltan las credenciales en .env");
+
+        // Determinar la URL de redirección dinámicamente
+        const redirectUrl = window.location.origin + import.meta.env.BASE_URL;
+
         return await supabase.auth.signInWithOAuth({
             provider: "google",
+            options: {
+                redirectTo: redirectUrl
+            }
         });
     };
 
