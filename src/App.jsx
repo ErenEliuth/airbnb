@@ -8,6 +8,7 @@ import { ExperienceDetails } from './pages/ExperienceDetails';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { AuthModal } from './components/AuthModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { useEffect } from 'react';
 
 const ProtectedRoute = ({ children }) => {
@@ -56,6 +57,7 @@ function App() {
               </ProtectedRoute>
             } />
           </Routes>
+          <MobileBottomNav />
         </BrowserRouter>
       </AuthProvider>
     </SettingsProvider>

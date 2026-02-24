@@ -2,9 +2,9 @@ import { Globe, Facebook, Twitter, Instagram } from 'lucide-react';
 
 export function Footer() {
     return (
-        <footer className="bg-gray-100 border-t border-gray-200 mt-12">
+        <footer className="bg-gray-100 border-t border-gray-200 mt-12 pb-32 md:pb-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 border-b border-gray-300 pb-12">
+                <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 border-b border-gray-300 pb-12">
                     {/* Asistencia */}
                     <div className="space-y-4">
                         <h3 className="font-semibold text-gray-900">Asistencia</h3>

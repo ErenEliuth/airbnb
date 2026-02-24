@@ -200,50 +200,59 @@ export function Home() {
         <div className="min-h-screen bg-white font-inherit">
             <Navbar />
 
-            <main className="pt-48 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
+            <main className="pt-24 md:pt-64 pb-24 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
+
+                {/* Mobile Category Tabs (Horizontal Scroll) */}
+                <div className="md:hidden flex items-center gap-6 overflow-x-auto no-scrollbar pb-4 mb-4 border-b border-gray-100 -mx-4 px-4 sticky top-[72px] bg-white z-40">
+                    {[
+                        { id: 'alojamientos', label: 'Alojamientos', icon: '🏠' },
+                        { id: 'experiencias', label: 'Experiencias', icon: '✨' },
+                        { id: 'servicios', label: 'Servicios', icon: '🛠️' }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex flex-col items-center gap-1 min-w-max pb-2 border-b-2 transition-all
+                                ${activeTab === tab.id ? 'border-black text-black' : 'border-transparent text-gray-400'}`}
+                        >
+                            <span className="text-xl">{tab.icon}</span>
+                            <span className={`text-[11px] font-bold ${activeTab === tab.id ? 'text-black' : 'text-gray-500'}`}>{tab.label}</span>
+                        </button>
+                    ))}
+                </div>
 
                 {/* Action Bar: Filters */}
-                <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    {/* Active Filters Bar */}
+                <div className="mb-8 flex items-center justify-between gap-4">
+                    {/* Active Filters Bar (Mobile optimized) */}
                     {(cityFilter || guestsFilter || startFilter || endFilter) ? (
-                        <div className="flex flex-col md:flex-row md:items-center gap-4 bg-gray-50/50 p-4 rounded-[16px] border border-gray-100 backdrop-blur-sm shadow-sm flex-1">
-                            <div className="flex items-center gap-2 text-[#222222]">
-                                <Filter size={18} />
-                                <h1 className="text-sm font-bold uppercase tracking-wider">{t('home.active_filters')}</h1>
-                            </div>
-                            <div className="flex gap-2 flex-wrap">
+                        <div className="flex-1 overflow-hidden">
+                            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
                                 {cityFilter && (
-                                    <span className="bg-white px-4 py-1.5 rounded-full text-xs font-semibold border border-gray-200 shadow-sm text-gray-700">
+                                    <span className="bg-gray-100 px-3 py-1.5 rounded-full text-[11px] font-bold border border-gray-200 text-gray-700 whitespace-nowrap">
                                         {cityFilter}
                                     </span>
                                 )}
                                 {guestsFilter && (
-                                    <span className="bg-white px-4 py-1.5 rounded-full text-xs font-semibold border border-gray-200 shadow-sm text-gray-700">
+                                    <span className="bg-gray-100 px-3 py-1.5 rounded-full text-[11px] font-bold border border-gray-200 text-gray-700 whitespace-nowrap">
                                         {guestsFilter} {t('home.guests')}
                                     </span>
                                 )}
-                                {(minPriceFilter || maxPriceFilter) && (
-                                    <span className="bg-white px-4 py-1.5 rounded-full text-xs font-semibold border border-gray-200 shadow-sm text-gray-700">
-                                        {minPriceFilter ? formatPrice(parseInt(minPriceFilter)) : '$0'} - {maxPriceFilter ? formatPrice(parseInt(maxPriceFilter)) : '∞'}
-                                    </span>
-                                )}
+                                <button
+                                    onClick={clearFilters}
+                                    className="text-[11px] font-black text-[#FF385C] underline uppercase tracking-tight whitespace-nowrap px-2"
+                                >
+                                    Borrar
+                                </button>
                             </div>
-                            <button
-                                onClick={clearFilters}
-                                className="mt-2 md:mt-0 text-sm font-bold text-[#FF385C] hover:underline flex items-center gap-1.5 transition-all"
-                            >
-                                <XCircle size={16} />
-                                {t('home.clear_all')}
-                            </button>
                         </div>
                     ) : <div className="flex-1"></div>}
 
                     {/* Advanced Filters Button */}
                     <button
                         onClick={() => setIsFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-5 py-3.5 border border-gray-300 rounded-xl hover:border-black hover:bg-gray-50 transition shadow-sm bg-white text-sm font-bold shrink-0 self-start md:self-auto"
+                        className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl hover:border-black transition shadow-sm bg-white text-xs font-bold shrink-0"
                     >
-                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '14px', width: '14px', fill: 'currentColor' }}><path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path></svg>
+                        <Filter size={14} strokeWidth={3} />
                         Filtros
                     </button>
                 </div>

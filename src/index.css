@@ -21,6 +21,10 @@
   @apply backdrop-blur-md bg-white/80 border border-white/20;
 }
 
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 .airbnb-input {
   @apply w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400;
 }
@@ -55,6 +59,42 @@
   background-color: #f3f4f6 !important;
   color: #111 !important;
   border-radius: 0 !important;
+}
+
+/* Strict Visibility Utilities */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
 }
 
 .rdp-day_disabled {

@@ -474,7 +474,7 @@ export function ListingDetails() {
                     </div>
 
                     {/* ── Right Column: Booking Widget ── */}
-                    <div className="relative">
+                    <div className="relative hidden md:block">
                         <div className="sticky top-32 border border-gray-100 rounded-[24px] p-6 shadow-2xl bg-white w-full max-w-[400px] ml-auto">
 
                             {/* Price header */}
@@ -664,6 +664,28 @@ export function ListingDetails() {
                 </div>
 
             </main>
+
+            {/* Sticky Mobile Footer */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4 flex items-center justify-between z-40 mb-[64px] pb-safe">
+                <div>
+                    <div className="flex items-center gap-1">
+                        <span className="font-bold text-[18px] text-[#222222]">{formatPrice(listing.price)}</span>
+                        <span className="text-gray-500 text-sm"> {t('listing.night')}</span>
+                    </div>
+                    <div className="text-xs font-semibold underline text-[#222222] mt-0.5">
+                        {dateRange.from && dateRange.to
+                            ? `${format(dateRange.from, 'd MMM')} – ${format(dateRange.to, 'd MMM')}`
+                            : 'Selecciona fechas'}
+                    </div>
+                </div>
+                <button
+                    onClick={handleBooking}
+                    disabled={booking || isOwner || !user}
+                    className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-8 py-3 rounded-lg font-bold text-[16px] shadow-sm active:scale-95 disabled:opacity-50"
+                >
+                    {booking ? <Loader2 size={20} className="animate-spin" /> : 'Reservar'}
+                </button>
+            </div>
 
             {/* Photo Modal */}
             {isPhotoModalOpen && (
