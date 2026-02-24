@@ -26,10 +26,22 @@ export function Home() {
     const [minPrice, setMinPrice] = useState(minPriceFilter || '');
     const [maxPrice, setMaxPrice] = useState(maxPriceFilter || '');
     const [selectedRoomTypes, setSelectedRoomTypes] = useState({
-        "Alojamiento entero": roomTypesFilter?.includes("Alojamiento entero") || false,
-        "Habitación privada": roomTypesFilter?.includes("Habitación privada") || false,
-        "Habitación compartida": roomTypesFilter?.includes("Habitación compartida") || false
+        "entire": roomTypesFilter?.includes("entire") || false,
+        "private": roomTypesFilter?.includes("private") || false,
+        "shared": roomTypesFilter?.includes("shared") || false
     });
+
+    const roomTypeLabels = {
+        "entire": "Alojamiento entero",
+        "private": "Habitación privada",
+        "shared": "Habitación compartida"
+    };
+
+    const roomTypeDescriptions = {
+        "entire": "Un lugar solo para ti",
+        "private": "Tu propia habitación en una casa o en un hotel, además de algunos espacios compartidos",
+        "shared": "Un espacio para dormir y espacios comunes que se comparten con otras personas"
+    };
 
     const mappedCategory =
         activeTab === 'experiencias' ? 'experience' :
@@ -57,12 +69,25 @@ export function Home() {
         return () => window.removeEventListener('listing-created', fetchListings);
     }, [cityFilter, guestsFilter, startFilter, endFilter, minPriceFilter, maxPriceFilter, roomTypesFilter, activeTab]);
 
+    // Sync local modal state with URL filters when modal opens
+    useEffect(() => {
+        if (isFilterModalOpen) {
+            setMinPrice(minPriceFilter || '');
+            setMaxPrice(maxPriceFilter || '');
+            setSelectedRoomTypes({
+                "entire": roomTypesFilter?.includes("entire") || false,
+                "private": roomTypesFilter?.includes("private") || false,
+                "shared": roomTypesFilter?.includes("shared") || false
+            });
+        }
+    }, [isFilterModalOpen, minPriceFilter, maxPriceFilter, roomTypesFilter]);
+
     const fetchListings = async () => {
         try {
             setLoading(true);
             let query = supabase
                 .from('listings')
-                .select('*')
+                .select('*, reviews(rating)')
                 .eq('category', mappedCategory)
                 .order('created_at', { ascending: false });
 
@@ -97,13 +122,25 @@ export function Home() {
 
             const { data, error } = await query;
 
-            let results = data || [];
+            let results = (data || []).map(listing => {
+                const reviews = listing.reviews || [];
+                const avg = reviews.length > 0
+                    ? (reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length).toFixed(2)
+                    : null;
+                return { ...listing, rating: avg };
+            });
 
             // Add defaults if applicable
             if (activeTab === 'experiencias') {
-                results = [...results, ...defaultExperiences];
+                let filteredExp = [...defaultExperiences];
+                if (minPriceFilter) filteredExp = filteredExp.filter(e => e.price >= parseInt(minPriceFilter));
+                if (maxPriceFilter) filteredExp = filteredExp.filter(e => e.price <= parseInt(maxPriceFilter));
+                results = [...results, ...filteredExp];
             } else if (activeTab === 'servicios') {
-                results = [...results, ...defaultServices];
+                let filteredSrv = [...defaultServices];
+                if (minPriceFilter) filteredSrv = filteredSrv.filter(s => s.price >= parseInt(minPriceFilter));
+                if (maxPriceFilter) filteredSrv = filteredSrv.filter(s => s.price <= parseInt(maxPriceFilter));
+                results = [...results, ...filteredSrv];
             }
 
             setListings(results);
@@ -123,9 +160,9 @@ export function Home() {
         setMinPrice('');
         setMaxPrice('');
         setSelectedRoomTypes({
-            "Alojamiento entero": false,
-            "Habitación privada": false,
-            "Habitación compartida": false
+            "entire": false,
+            "private": false,
+            "shared": false
         });
     };
 
@@ -351,11 +388,9 @@ export function Home() {
                                                 onChange={() => setSelectedRoomTypes(prev => ({ ...prev, [type]: !isChecked }))}
                                             />
                                             <div>
-                                                <div className="font-semibold text-[#222222]">{type}</div>
+                                                <div className="font-semibold text-[#222222]">{roomTypeLabels[type]}</div>
                                                 <div className="text-sm text-gray-500">
-                                                    {type === "Alojamiento entero" && "Un lugar solo para ti"}
-                                                    {type === "Habitación privada" && "Tu propia habitación en una casa o en un hotel, además de algunos espacios compartidos"}
-                                                    {type === "Habitación compartida" && "Un espacio para dormir y espacios comunes que se comparten con otras personas"}
+                                                    {roomTypeDescriptions[type]}
                                                 </div>
                                             </div>
                                         </label>
@@ -366,9 +401,19 @@ export function Home() {
                         </div>
 
                         {/* Footer */}
-                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                            <button onClick={clearModalFilters} className="underline text-[#222222] font-semibold hover:bg-gray-50 px-2 py-1 rounded">Limpiar todos</button>
-                            <button onClick={applyFilters} className="bg-[#222222] text-white px-6 py-3 rounded-xl font-semibold hover:bg-black transition">Mostrar alojamientos</button>
+                        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-white rounded-b-2xl">
+                            <button
+                                onClick={clearModalFilters}
+                                className="underline text-[#222222] font-semibold hover:bg-gray-50 px-4 py-2 rounded-lg transition"
+                            >
+                                Limpiar todos
+                            </button>
+                            <button
+                                onClick={applyFilters}
+                                className="bg-[#222222] text-white px-8 py-3 rounded-xl font-semibold hover:bg-black transition shadow-md active:scale-95"
+                            >
+                                Mostrar alojamientos
+                            </button>
                         </div>
                     </div>
                 </div>

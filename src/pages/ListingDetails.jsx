@@ -58,10 +58,80 @@ export function ListingDetails() {
     const [hostEmail, setHostEmail] = useState(null);
     const [blockedDates, setBlockedDates] = useState([]);
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+    const [reviews, setReviews] = useState([]);
+    const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const [averageRating, setAverageRating] = useState(0);
 
     const dateLocale = language === 'en' ? enUS : language === 'fr' ? fr : es;
 
-    useEffect(() => { fetchListing(); }, [id]);
+    useEffect(() => {
+        fetchListing();
+        fetchReviews();
+    }, [id]);
+
+    const fetchReviews = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('reviews')
+                .select('*')
+                .eq('listing_id', id)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setReviews(data || []);
+
+            if (data && data.length > 0) {
+                const avg = data.reduce((acc, curr) => acc + curr.rating, 0) / data.length;
+                setAverageRating(avg.toFixed(2));
+            } else {
+                setAverageRating(0);
+            }
+        } catch (err) {
+            console.error('Error fetching reviews:', err);
+        }
+    };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) {
+            showToast('Debes iniciar sesión para dejar un comentario.', 'warning');
+            return;
+        }
+        if (!newReview.comment.trim()) {
+            showToast('Escribe un comentario antes de enviar.', 'warning');
+            return;
+        }
+
+        setSubmittingReview(true);
+        try {
+            const { error } = await supabase
+                .from('reviews')
+                .insert({
+                    listing_id: id,
+                    user_id: user.id,
+                    rating: newReview.rating,
+                    comment: newReview.comment
+                });
+
+            if (error) {
+                if (error.code === '23505') {
+                    showToast('Ya has dejado un comentario en este alojamiento.', 'warning');
+                } else {
+                    throw error;
+                }
+            } else {
+                showToast('¡Gracias por tu comentario!', 'success');
+                setNewReview({ rating: 5, comment: '' });
+                fetchReviews();
+            }
+        } catch (err) {
+            console.error('Error submitting review:', err);
+            showToast('Error al enviar el comentario.', 'error');
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
 
     const showToast = (message, type = 'success') => {
         setToast({ message, type });
@@ -227,7 +297,9 @@ export function ListingDetails() {
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 flex-wrap font-medium">
                     <div className="flex items-center gap-1.5">
                         <Star className="w-3.5 h-3.5 fill-black text-black" />
-                        <span className="text-black font-semibold">New</span>
+                        <span className="text-black font-semibold">
+                            {averageRating > 0 ? `${averageRating} · ${reviews.length} evaluaci${reviews.length === 1 ? 'ón' : 'ones'}` : 'Nuevo'}
+                        </span>
                     </div>
                     <span>·</span>
                     <span className="underline font-bold text-black cursor-pointer hover:bg-gray-50">{listing.location}</span>
@@ -495,6 +567,95 @@ export function ListingDetails() {
                             zoom={15}
                         />
                     </div>
+                </div>
+
+                {/* Reviews Section */}
+                <div className="py-16 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-2xl font-bold text-[#222222] mb-8">
+                        <Star className="w-6 h-6 fill-black" />
+                        <h2>{averageRating > 0 ? `${averageRating} · ${reviews.length} evaluaci${reviews.length === 1 ? 'ón' : 'ones'}` : 'Sin evaluaciones aún'}</h2>
+                    </div>
+
+                    {/* Review Form */}
+                    {user && !isOwner && (
+                        <div className="mb-12 bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                            <h3 className="font-bold text-lg mb-4">Escribe una evaluación</h3>
+                            <form onSubmit={handleReviewSubmit} className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <label className="text-sm font-semibold">Calificación:</label>
+                                    <div className="flex gap-1">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setNewReview({ ...newReview, rating: star })}
+                                                className="focus:outline-none transition-transform hover:scale-110"
+                                            >
+                                                <Star
+                                                    className={`w-6 h-6 ${star <= newReview.rating ? 'fill-black text-black' : 'text-gray-300'}`}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <textarea
+                                    value={newReview.comment}
+                                    onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                                    placeholder="Cuéntales a otros huéspedes sobre tu estancia..."
+                                    className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none min-h-[100px] bg-white transition-all"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={submittingReview}
+                                    className="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition active:scale-95 disabled:bg-gray-400"
+                                >
+                                    {submittingReview ? 'Enviando...' : 'Enviar evaluación'}
+                                </button>
+                            </form>
+                        </div>
+                    )}
+
+                    {!user && (
+                        <div className="mb-12 bg-gray-50 p-6 rounded-2xl border border-gray-100 text-center">
+                            <p className="text-gray-600">Debes iniciar sesión para calificar este alojamiento.</p>
+                        </div>
+                    )}
+
+                    {/* Reviews List */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10">
+                        {reviews.map((rev) => (
+                            <div key={rev.id} className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">
+                                        {rev.user_id.substring(0, 1).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-[#222222]">Usuario</div>
+                                        <div className="text-sm text-gray-500">
+                                            {format(new Date(rev.created_at), "MMMM 'de' yyyy", { locale: es })}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1 mb-1">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-3 h-3 ${i < rev.rating ? 'fill-black text-black' : 'text-gray-300'}`}
+                                        />
+                                    ))}
+                                </div>
+                                <p className="text-[#222222] leading-relaxed">
+                                    {rev.comment}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {reviews.length === 0 && (
+                        <div className="text-center py-10">
+                            <p className="text-gray-400 italic">Aún no hay comentarios para este alojamiento. ¡Sé el primero en dejar uno!</p>
+                        </div>
+                    )}
                 </div>
 
             </main>

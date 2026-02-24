@@ -137,7 +137,7 @@ export function ListingCard({ listing }) {
 
                         <div className="flex items-center gap-1 text-[14px] font-normal">
                             <Star size={12} className="fill-[#222222] text-[#222222]" />
-                            <span>{rating || "4.85"}</span>
+                            <span>{rating || "Nuevo"}</span>
                         </div>
                     </div>
                 </div>
