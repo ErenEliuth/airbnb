@@ -29,7 +29,7 @@ function App() {
   return (
     <SettingsProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <AuthModal />
           <Routes>
             <Route path="/" element={<Home />} />
