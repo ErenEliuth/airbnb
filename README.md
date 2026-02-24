@@ -51,4 +51,4 @@ Si deseas ejecutar este proyecto localmente, sigue estos pasos:
 
 ---
 
-Desarrollado con ❤️ por **ErenEliuth**
+Desarrollado con  por **ErenEliuth**
