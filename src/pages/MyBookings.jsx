@@ -87,34 +87,38 @@ export function MyBookingsPage() {
     return (
         <div className="min-h-screen bg-white pb-20 font-inherit">
             <Navbar />
-            <main className="pt-24 max-w-4xl mx-auto px-4 sm:px-8">
+            <main className="pt-16 md:pt-24 max-w-4xl mx-auto px-4 sm:px-8">
 
-                {/* Page title */}
-                <div className="flex items-center gap-4 mb-10">
+                {/* Page title - hidden on mobile since navbar shows title */}
+                <div className="hidden md:flex items-center gap-4 mb-10">
                     <div className="bg-[#f7f7f7] p-3 rounded-2xl shadow-sm border border-gray-100">
                         <MessageCircle className="w-8 h-8 text-[#222222]" />
                     </div>
                     <h1 className="text-3xl font-bold text-[#222222] tracking-tight">{t('nav.trips')} & {t('nav.messages')}</h1>
                 </div>
+                {/* Mobile title */}
+                <div className="md:hidden mb-6 pt-2">
+                    <h1 className="text-[22px] font-bold text-[#222222] tracking-tight">{t('nav.trips')} & {t('nav.messages')}</h1>
+                </div>
 
                 {/* Tabs */}
-                <div className="flex items-center justify-between border-b border-gray-100 mb-10">
+                <div className="flex items-center justify-between border-b border-gray-100 mb-6 md:mb-10">
                     <div className="flex">
                         <button
                             onClick={() => setTab('bookings')}
-                            className={`px-8 py-4 text-base font-bold transition-all -mb-px
+                            className={`px-5 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold transition-all -mb-px
                                 ${tab === 'bookings' ? 'border-b-2 border-[#222222] text-[#222222]' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
                         >
                             {t('nav.trips')} ({bookings.length})
                         </button>
                         <button
                             onClick={() => setTab('messages')}
-                            className={`px-8 py-4 text-base font-bold transition-all -mb-px flex items-center gap-3
+                            className={`px-5 md:px-8 py-3 md:py-4 text-sm md:text-base font-bold transition-all -mb-px flex items-center gap-2
                                 ${tab === 'messages' ? 'border-b-2 border-[#222222] text-[#222222]' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
                         >
                             {t('nav.messages')}
                             {unreadMessages > 0 && (
-                                <span className="bg-[#FF385C] text-white text-[11px] font-black rounded-full px-1.5 py-0.5 min-w-[20px] h-5 flex items-center justify-center shadow-lg animate-pulse">
+                                <span className="bg-[#FF385C] text-white text-[11px] font-black rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center shadow-lg">
                                     {unreadMessages}
                                 </span>
                             )}
@@ -123,9 +127,9 @@ export function MyBookingsPage() {
                     {tab === 'messages' && notifications.length > 0 && (
                         <button
                             onClick={clearAllMessages}
-                            className="text-sm font-bold underline hover:text-[#FF385C] transition-colors pr-2"
+                            className="text-xs md:text-sm font-bold underline hover:text-[#FF385C] transition-colors pr-1"
                         >
-                            Limpiar todo
+                            Limpiar
                         </button>
                     )}
                 </div>

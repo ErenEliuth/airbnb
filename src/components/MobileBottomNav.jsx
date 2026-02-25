@@ -24,7 +24,10 @@ export function MobileBottomNav() {
     };
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 flex justify-between items-center z-[100] pb-safe">
+        <div
+            className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center z-[100]"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 8px)', paddingTop: '8px' }}
+        >
             {tabs.map((tab) => {
                 const isActive = location.pathname === tab.path;
                 const Icon = tab.icon;
@@ -34,11 +37,13 @@ export function MobileBottomNav() {
                         key={tab.id}
                         to={tab.path || '#'}
                         onClick={(e) => handleClick(e, tab.path)}
-                        className={`flex flex-col items-center gap-1 min-w-[64px] transition-colors ${isActive ? 'text-[#FF385C]' : 'text-gray-400 hover:text-gray-600'
+                        className={`flex flex-col items-center gap-[3px] px-3 py-1 transition-colors min-w-[56px] ${isActive ? 'text-[#FF385C]' : 'text-gray-400 hover:text-gray-600'
                             }`}
                     >
-                        <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                        <span className="text-[10px] font-medium">{tab.label}</span>
+                        <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                        <span className="text-[9px] font-semibold tracking-tight leading-tight text-center">
+                            {tab.label}
+                        </span>
                     </Link>
                 );
             })}

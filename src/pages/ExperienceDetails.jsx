@@ -69,13 +69,34 @@ export function ExperienceDetails() {
         <div className="min-h-screen bg-white font-inherit pb-20">
             <Navbar />
 
-            <main className="pt-28 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+            <main className="pt-16 md:pt-28 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+
+                {/* Mobile image hero */}
+                <div className="md:hidden -mx-4 mb-6">
+                    <div className="relative bg-gray-100 overflow-hidden" style={{ height: '280px' }}>
+                        {experience.images && experience.images.length > 0 && (
+                            <img
+                                src={experience.images[0]}
+                                alt={experience.title}
+                                className="w-full h-full object-cover"
+                            />
+                        )}
+                        <div className="absolute top-4 right-4 flex gap-2">
+                            <button className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm active:scale-95">
+                                <Share size={16} />
+                            </button>
+                            <button className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm active:scale-95">
+                                <Heart size={16} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Top Section: Images + Title Card */}
                 <div className="flex flex-col lg:flex-row gap-10 xl:gap-16 items-start mb-16">
 
-                    {/* Images Grid */}
-                    <div className="w-full lg:w-[55%]">
+                    {/* Desktop Images Grid */}
+                    <div className="hidden md:block w-full lg:w-[55%]">
                         <div className="grid grid-cols-2 gap-2 h-[450px] md:h-[600px] rounded-[24px] overflow-hidden">
                             {(experience.images && experience.images.length > 0 ? experience.images : ['https://images.unsplash.com/photo-1544320677-440ebc72a6b2?auto=format&fit=crop&q=80&w=800']).slice(0, 4).map((img, i) => (
                                 <img key={i} src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
@@ -209,6 +230,25 @@ export function ExperienceDetails() {
                 </div>
             </main>
             <Footer />
+
+            {/* Mobile sticky footer */}
+            <div
+                className="md:hidden fixed left-0 right-0 bg-white border-t border-gray-200 px-5 flex items-center justify-between z-[45]"
+                style={{
+                    bottom: 'calc(60px + env(safe-area-inset-bottom))',
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                    boxShadow: '0 -4px 16px rgba(0,0,0,0.06)'
+                }}
+            >
+                <div>
+                    <div className="text-[13px] font-bold text-[#222222]">Desde {formatPrice(experience.price)}</div>
+                    <div className="text-[11px] text-gray-500">por participante · Cancelación gratuita</div>
+                </div>
+                <button className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-6 py-3 rounded-[10px] font-bold text-[14px] shadow-sm active:scale-95">
+                    Ver fechas
+                </button>
+            </div>
         </div>
     );
 }

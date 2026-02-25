@@ -235,30 +235,84 @@ export function Navbar() {
                 {/* ─── MOBILE HEADER ─── */}
                 <div className="md:hidden">
                     {isHome ? (
-                        <div className="pt-4 px-4 pb-4">
-                            <div onClick={handleSearch} className="flex items-center bg-white border border-gray-200 rounded-full shadow-lg p-3 w-full active:scale-95 transition-transform duration-200">
-                                <Search className="text-[#FF385C] ml-2" size={20} strokeWidth={3} />
-                                <div className="flex flex-col flex-1 ml-4">
-                                    <span className="text-sm font-bold text-gray-900 leading-tight">¿A dónde quieres ir?</span>
-                                    <div className="flex gap-1 text-[11px] text-gray-500 font-medium">
-                                        <span>Cualquier lugar</span>
-                                        <span className="opacity-50">•</span>
-                                        <span>Cualquier semana</span>
-                                        <span className="opacity-50">•</span>
-                                        <span>¿Cuántos?</span>
+                        <div className="bg-white">
+                            {/* Search pill */}
+                            <div className="px-4 pt-3 pb-2">
+                                <div
+                                    onClick={handleSearch}
+                                    className="flex items-center bg-white border border-gray-200 rounded-full shadow-md py-2.5 px-3 w-full active:scale-[0.98] transition-all duration-150"
+                                    style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.12)' }}
+                                >
+                                    <div className="bg-[#FF385C] rounded-full p-1.5 mr-3 flex-shrink-0">
+                                        <Search className="text-white" size={14} strokeWidth={3} />
+                                    </div>
+                                    <div className="flex flex-col flex-1 min-w-0">
+                                        <span className="text-[13px] font-bold text-gray-900 leading-tight truncate">Empieza la búsqueda</span>
+                                        <div className="flex gap-1 text-[10px] text-gray-400 font-medium leading-tight">
+                                            <span>En cualquier lugar</span>
+                                            <span>·</span>
+                                            <span>Cualquier semana</span>
+                                            <span>·</span>
+                                            <span>Agregar viajeros</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-2 border border-gray-200 rounded-full bg-white flex-shrink-0 ml-2">
+                                        <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                            <path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                        </svg>
                                     </div>
                                 </div>
-                                <div className="p-2 border border-gray-200 rounded-full bg-gray-50">
-                                    <svg viewBox="0 0 16 16" className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" /></svg>
-                                </div>
+                            </div>
+
+                            {/* Category tabs */}
+                            <div className="flex items-center gap-0 overflow-x-auto no-scrollbar px-4 pb-2 border-b border-gray-100">
+                                {tabs.map(({ id, label, Icon, badge }) => (
+                                    <button
+                                        key={id}
+                                        onClick={() => { setActiveTab(id); if (!isHome) navigate('/'); }}
+                                        className={`relative flex flex-col items-center gap-1 px-5 py-2 flex-shrink-0 border-b-2 transition-all ${activeTab === id
+                                                ? 'border-gray-900 text-gray-900'
+                                                : 'border-transparent text-gray-400'
+                                            }`}
+                                    >
+                                        <Icon />
+                                        <span className="text-[10px] font-bold whitespace-nowrap">{label}</span>
+                                        {badge && (
+                                            <span className="absolute top-1 right-2 bg-rose-500 text-white text-[7px] font-bold px-1 py-0.5 rounded-full leading-none">
+                                                NOVEDAD
+                                            </span>
+                                        )}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     ) : (
                         <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                            <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition"><ChevronLeft size={24} /></button>
-                            <div className="flex-1 text-center font-bold text-sm truncate px-4">{location.pathname.includes('/listing/') ? 'Detalle' : 'Airbnb'}</div>
-                            <div className="flex gap-2">
-                                <button className="p-2 hover:bg-gray-100 rounded-full transition"><Globe size={20} /></button>
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="p-2 hover:bg-gray-100 rounded-full transition active:scale-95"
+                                style={{ minWidth: 44, minHeight: 44 }}
+                            >
+                                <ChevronLeft size={22} />
+                            </button>
+                            <div className="flex-1 text-center font-bold text-sm truncate px-4">
+                                {location.pathname.includes('/listing/') ? 'Detalle del alojamiento' :
+                                    location.pathname.includes('/experience/') ? 'Detalle de experiencia' :
+                                        location.pathname.includes('/profile') ? 'Mi perfil' :
+                                            location.pathname.includes('/notifications') ? 'Notificaciones' :
+                                                location.pathname.includes('/mis-reservas') ? 'Mis viajes' : 'Airbnb'}
+                            </div>
+                            <div className="flex gap-1">
+                                <button
+                                    className="p-2 hover:bg-gray-100 rounded-full transition active:scale-95"
+                                    style={{ minWidth: 44, minHeight: 44 }}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M16.2 7.8l-2-3.46A10.003 10.003 0 002 12c0 2.09.64 4.03 1.73 5.65" />
+                                        <path d="M5.1 17.28A10 10 0 0022 12a9.95 9.95 0 00-1.72-5.66" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     )}

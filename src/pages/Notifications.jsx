@@ -147,7 +147,7 @@ export function NotificationsPage() {
                 </div>
             )}
 
-            <main className="pt-24 max-w-4xl mx-auto px-4 sm:px-8">
+            <main className="pt-16 md:pt-24 max-w-4xl mx-auto px-4 sm:px-8">
                 {/* Header */}
                 <div className="flex items-center gap-5 mb-12">
                     <div className="relative bg-[#f7f7f7] p-4 rounded-[24px] border border-gray-100 shadow-sm">

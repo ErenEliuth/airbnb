@@ -290,23 +290,65 @@ export function ListingDetails() {
 
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-            <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+            <main className="pt-16 md:pt-24 max-w-7xl mx-auto px-0 md:px-8 lg:px-12">
 
-                {/* Header */}
-                <h1 className="text-[26px] font-bold text-[#222222] mb-2 tracking-tight">{listing.title}</h1>
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 flex-wrap font-medium">
-                    <div className="flex items-center gap-1.5">
-                        <Star className="w-3.5 h-3.5 fill-black text-black" />
-                        <span className="text-black font-semibold">
-                            {averageRating > 0 ? `${averageRating} · ${reviews.length} evaluaci${reviews.length === 1 ? 'ón' : 'ones'}` : 'Nuevo'}
-                        </span>
-                    </div>
-                    <span>·</span>
-                    <span className="underline font-bold text-black cursor-pointer hover:bg-gray-50">{listing.location}</span>
+                {/* Mobile-only: Image carousel hero */}
+                <div className="md:hidden relative">
+                    {listing.images && listing.images.length > 0 && (
+                        <div className="relative overflow-hidden bg-gray-100" style={{ height: '280px' }}>
+                            <img
+                                src={listing.images[0]}
+                                alt={listing.title}
+                                className="w-full h-full object-cover"
+                            />
+                            {listing.images.length > 1 && (
+                                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-[12px] font-bold shadow-sm">
+                                    1/{listing.images.length}
+                                </div>
+                            )}
+                            <button
+                                onClick={() => setIsPhotoModalOpen(true)}
+                                className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-[12px] font-bold shadow-sm active:scale-95"
+                            >
+                                Ver fotos
+                            </button>
+                        </div>
+                    )}
                 </div>
 
-                {/* Images Grid */}
-                <div className="rounded-xl overflow-hidden bg-gray-100 mb-10 grid gap-2 h-[350px] md:h-[480px] relative grid-cols-1 md:grid-cols-4 md:grid-rows-2">
+                {/* Desktop header area */}
+                <div className="hidden md:block px-0">
+                    {/* Header */}
+                    <h1 className="text-[26px] font-bold text-[#222222] mb-2 tracking-tight">{listing.title}</h1>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 flex-wrap font-medium">
+                        <div className="flex items-center gap-1.5">
+                            <Star className="w-3.5 h-3.5 fill-black text-black" />
+                            <span className="text-black font-semibold">
+                                {averageRating > 0 ? `${averageRating} · ${reviews.length} evaluaci${reviews.length === 1 ? 'ón' : 'ones'}` : 'Nuevo'}
+                            </span>
+                        </div>
+                        <span>·</span>
+                        <span className="underline font-bold text-black cursor-pointer hover:bg-gray-50">{listing.location}</span>
+                    </div>
+                </div>
+
+                {/* Mobile title section */}
+                <div className="md:hidden px-4 pt-4 pb-2">
+                    <h1 className="text-[20px] font-bold text-[#222222] mb-1.5 tracking-tight leading-snug">{listing.title}</h1>
+                    <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap font-medium">
+                        <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-black text-black" />
+                            <span className="text-black font-semibold text-[13px]">
+                                {averageRating > 0 ? `${averageRating} · ${reviews.length} ${reviews.length === 1 ? 'evaluación' : 'evaluaciones'}` : 'Nuevo'}
+                            </span>
+                        </div>
+                        <span className="text-gray-400">·</span>
+                        <span className="underline font-semibold text-black text-[13px] cursor-pointer">{listing.city || listing.location}</span>
+                    </div>
+                </div>
+
+                {/* Images Grid - Desktop only */}
+                <div className="hidden md:grid rounded-xl overflow-hidden bg-gray-100 mb-10 gap-2 md:h-[480px] relative grid-cols-1 md:grid-cols-4 md:grid-rows-2">
                     {/* Foto Principal */}
                     <div className={`relative ${listing.images?.length === 1 ? 'col-span-4 row-span-2' : 'md:col-span-2 md:row-span-2'
                         }`}>
@@ -357,7 +399,7 @@ export function ListingDetails() {
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 relative px-4 md:px-0">
 
                     {/* ── Left Column ── */}
                     <div className="md:col-span-2 space-y-10">
@@ -666,13 +708,21 @@ export function ListingDetails() {
             </main>
 
             {/* Sticky Mobile Footer */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4 flex items-center justify-between z-40 mb-[64px] pb-safe">
+            <div
+                className="md:hidden fixed left-0 right-0 bg-white border-t border-gray-200 px-5 flex items-center justify-between z-[45]"
+                style={{
+                    bottom: 'calc(60px + env(safe-area-inset-bottom))',
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                    boxShadow: '0 -4px 16px rgba(0,0,0,0.06)'
+                }}
+            >
                 <div>
                     <div className="flex items-center gap-1">
-                        <span className="font-bold text-[18px] text-[#222222]">{formatPrice(listing.price)}</span>
-                        <span className="text-gray-500 text-sm"> {t('listing.night')}</span>
+                        <span className="font-bold text-[17px] text-[#222222]">{formatPrice(listing.price)}</span>
+                        <span className="text-gray-500 text-xs"> {t('listing.night')}</span>
                     </div>
-                    <div className="text-xs font-semibold underline text-[#222222] mt-0.5">
+                    <div className="text-[11px] font-semibold underline text-[#222222] mt-0.5">
                         {dateRange.from && dateRange.to
                             ? `${format(dateRange.from, 'd MMM')} – ${format(dateRange.to, 'd MMM')}`
                             : 'Selecciona fechas'}
@@ -681,9 +731,9 @@ export function ListingDetails() {
                 <button
                     onClick={handleBooking}
                     disabled={booking || isOwner || !user}
-                    className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-8 py-3 rounded-lg font-bold text-[16px] shadow-sm active:scale-95 disabled:opacity-50"
+                    className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-7 py-3 rounded-[10px] font-bold text-[15px] shadow-sm active:scale-95 disabled:opacity-50"
                 >
-                    {booking ? <Loader2 size={20} className="animate-spin" /> : 'Reservar'}
+                    {booking ? <Loader2 size={18} className="animate-spin" /> : 'Ver fechas'}
                 </button>
             </div>
 

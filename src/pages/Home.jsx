@@ -200,29 +200,13 @@ export function Home() {
         <div className="min-h-screen bg-white font-inherit">
             <Navbar />
 
-            <main className="pt-24 md:pt-64 pb-24 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
+            <main className="pt-[112px] md:pt-64 pb-28 md:pb-24 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
 
-                {/* Mobile Category Tabs (Horizontal Scroll) */}
-                <div className="md:hidden flex items-center gap-6 overflow-x-auto no-scrollbar pb-4 mb-4 border-b border-gray-100 -mx-4 px-4 sticky top-[72px] bg-white z-40">
-                    {[
-                        { id: 'alojamientos', label: 'Alojamientos', icon: '🏠' },
-                        { id: 'experiencias', label: 'Experiencias', icon: '✨' },
-                        { id: 'servicios', label: 'Servicios', icon: '🛠️' }
-                    ].map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex flex-col items-center gap-1 min-w-max pb-2 border-b-2 transition-all
-                                ${activeTab === tab.id ? 'border-black text-black' : 'border-transparent text-gray-400'}`}
-                        >
-                            <span className="text-xl">{tab.icon}</span>
-                            <span className={`text-[11px] font-bold ${activeTab === tab.id ? 'text-black' : 'text-gray-500'}`}>{tab.label}</span>
-                        </button>
-                    ))}
-                </div>
+
+                {/* Mobile Category Tabs – hidden here because now shown in the Navbar for mobile */}
 
                 {/* Action Bar: Filters */}
-                <div className="mb-8 flex items-center justify-between gap-4">
+                <div className="mb-6 flex items-center justify-between gap-3">
                     {/* Active Filters Bar (Mobile optimized) */}
                     {(cityFilter || guestsFilter || startFilter || endFilter) ? (
                         <div className="flex-1 overflow-hidden">
@@ -245,31 +229,29 @@ export function Home() {
                                 </button>
                             </div>
                         </div>
-                    ) : <div className="flex-1"></div>}
+                    ) : <div className="flex-1" />}
 
                     {/* Advanced Filters Button */}
                     <button
                         onClick={() => setIsFilterModalOpen(true)}
-                        className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-xl hover:border-black transition shadow-sm bg-white text-xs font-bold shrink-0"
+                        className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 border border-gray-300 rounded-xl hover:border-black transition shadow-sm bg-white text-xs font-bold shrink-0 active:scale-95"
+                        style={{ minHeight: 40 }}
                     >
-                        <Filter size={14} strokeWidth={3} />
-                        Filtros
+                        <Filter size={13} strokeWidth={3} />
+                        <span>Filtros</span>
                     </button>
                 </div>
 
                 {loading ? (
                     <div className="space-y-16 mb-24">
                         <div>
-                            <div className="flex items-center justify-between mb-8 px-1">
-                                <div className="h-8 bg-gray-200 rounded-lg w-48 animate-pulse"></div>
-                                <div className="h-px flex-1 bg-gray-100 ml-8 hidden md:block" />
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-12">
-                                {[...Array(12)].map((_, i) => (
-                                    <div key={i} className="flex flex-col gap-3">
-                                        <div className="w-full aspect-[20/19] bg-gray-200 rounded-[14px] animate-pulse"></div>
-                                        <div className="h-4 bg-gray-200 rounded-md w-3/4 animate-pulse"></div>
-                                        <div className="h-4 bg-gray-200 rounded-md w-1/2 animate-pulse"></div>
+                            <div className="h-7 bg-gray-200 rounded-lg w-48 animate-pulse mb-6" />
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-12">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i} className="flex flex-col gap-2">
+                                        <div className="w-full aspect-[4/3] bg-gray-200 rounded-[14px] animate-pulse" />
+                                        <div className="h-3.5 bg-gray-200 rounded-md w-3/4 animate-pulse" />
+                                        <div className="h-3.5 bg-gray-200 rounded-md w-1/2 animate-pulse" />
                                     </div>
                                 ))}
                             </div>
@@ -277,15 +259,17 @@ export function Home() {
                     </div>
                 ) : (
                     <div className="mb-24">
-                        <div className="space-y-16">
+                        <div className="space-y-12 md:space-y-16">
                             {Object.keys(listingsByCity).length > 0 ? (
                                 Object.entries(listingsByCity).map(([city, cityListings]) => (
                                     <div key={city}>
-                                        <div className="flex items-center justify-between mb-8 px-1">
-                                            <h2 className="text-[26px] font-bold text-[#222222] tracking-tight truncate capitalize">{activeTab} en {city}</h2>
-                                            <div className="h-px flex-1 bg-gray-100 ml-8 hidden md:block" />
+                                        <div className="flex items-center justify-between mb-5 md:mb-8 px-0.5">
+                                            <h2 className="text-[20px] md:text-[26px] font-bold text-[#222222] tracking-tight truncate capitalize">
+                                                {activeTab} en {city}
+                                            </h2>
+                                            <div className="h-px flex-1 bg-gray-100 ml-6 hidden md:block" />
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-12">
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-3 md:gap-x-6 gap-y-6 md:gap-y-12">
                                             {cityListings.map((listing) => (
                                                 <ListingCard key={listing.id} listing={listing} />
                                             ))}

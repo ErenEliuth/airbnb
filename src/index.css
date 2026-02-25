@@ -13,6 +13,19 @@
   body {
     @apply text-[#222222];
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Prevent double-tap zoom on mobile */
+  * {
+    touch-action: manipulation;
+  }
+
+  /* Remove tap highlight on iOS */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -100,4 +113,125 @@
 .rdp-day_disabled {
   text-decoration: line-through !important;
   color: #d1d5db !important;
+}
+
+/* ─── MOBILE SPECIFIC STYLES (iPhone 15: 393×852px) ─── */
+@media (max-width: 767px) {
+
+  /* Mobile main content padding: top for navbar, bottom for bottom nav */
+  .mobile-main {
+    padding-top: 76px !important;
+    padding-bottom: 80px !important;
+  }
+
+  /* Mobile card full-width swipeable style */
+  .mobile-listing-card {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* Mobile image aspect ratio optimized for narrow screens */
+  .mobile-image-aspect {
+    aspect-ratio: 4/3;
+  }
+
+  /* Ensure listing detail images look great mobile */
+  .mobile-detail-hero {
+    height: 280px;
+    border-radius: 0;
+  }
+
+  /* Mobile category tab bar */
+  .mobile-tab-bar {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Smooth momentum scrolling on iOS */
+  .scroll-smooth-ios {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Mobile tap target minimum size (44px per Apple HIG) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects on mobile */
+  .no-hover-mobile:hover {
+    background-color: initial !important;
+    transform: none !important;
+    box-shadow: initial !important;
+  }
+
+  /* Mobile hero search bar */
+  .mobile-search-pill {
+    border-radius: 30px;
+    padding: 12px 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Full bleed sections */
+  .mobile-full-bleed {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Mobile sticky footer for booking */
+  .mobile-booking-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+    z-index: 40;
+  }
+
+  /* Airbnb-style mobile section headers */
+  .mobile-section-header {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222222;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+
+  /* Filter pill tags */
+  .mobile-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 24px;
+    background: #f5f5f5;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #e0e0e0;
+    white-space: nowrap;
+  }
+
+  /* Mobile sheet/drawer bottom */
+  .mobile-sheet {
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+  }
+
+  /* Active state for touch elements */
+  .mobile-active:active {
+    opacity: 0.7;
+    transform: scale(0.97);
+  }
+}
+
+/* Bottom nav safe area */
+.bottom-nav-height {
+  height: calc(60px + env(safe-area-inset-bottom));
 }

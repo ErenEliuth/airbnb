@@ -146,7 +146,7 @@ export function ProfilePage() {
         <div className="min-h-screen bg-white font-inherit">
             <Navbar />
 
-            <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-32">
+            <main className="pt-16 md:pt-24 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-32">
                 <div className="flex flex-col lg:flex-row gap-16">
 
                     {/* Sidebar */}
