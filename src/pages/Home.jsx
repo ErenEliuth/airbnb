@@ -211,7 +211,7 @@ export function Home() {
         <div className="min-h-screen bg-white font-inherit">
             <Navbar />
 
-            <main className="pt-[112px] md:pt-64 pb-28 md:pb-24 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
+            <main className="pt-[160px] md:pt-64 pb-28 md:pb-24 px-4 sm:px-8 lg:px-12 xl:px-20 max-w-[2520px] mx-auto min-h-screen">
 
 
                 {/* Mobile Category Tabs – hidden here because now shown in the Navbar for mobile */}
