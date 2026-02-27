@@ -1,22 +1,26 @@
 import { X, ChevronLeft, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
+// Cache-busting version: 1.0.2
 function Toast({ message, type, onClose }) {
     const colors = {
-        success: 'bg-green-50 border-green-200 text-green-800 shadow-green-100',
-        error: 'bg-red-50 border-red-200 text-red-800 shadow-red-100',
-        warning: 'bg-amber-50 border-amber-200 text-amber-800 shadow-amber-100',
+        success: 'bg-white border-green-500 text-green-900 shadow-[0_20px_40px_rgba(34,197,94,0.15)]',
+        error: 'bg-white border-red-500 text-red-900 shadow-[0_20px_40px_rgba(239,68,68,0.15)]',
+        warning: 'bg-white border-amber-500 text-amber-900 shadow-[0_20px_40px_rgba(245,158,11,0.15)]',
     };
     const Icon = type === 'success' ? CheckCircle2 : (type === 'error' ? X : AlertCircle);
-    const iconColor = type === 'success' ? 'text-green-500' : (type === 'error' ? 'text-red-500' : 'text-amber-500');
+    const iconWrapperColor = type === 'success' ? 'bg-green-500 text-white' : (type === 'error' ? 'bg-red-500 text-white' : 'bg-amber-500 text-white');
 
     return (
-        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-3 border rounded-2xl px-6 py-4 shadow-2xl min-w-[320px] animate-in slide-in-from-top-10 duration-500 ${colors[type]}`}>
-            <div className={`p-2 rounded-full bg-white shadow-sm ${iconColor}`}>
-                <Icon size={20} />
+        <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-4 border-2 rounded-3xl px-6 py-5 min-w-[340px] animate-in slide-in-from-top-12 fade-in duration-500 ${colors[type]}`}>
+            <div className={`p-2.5 rounded-2xl shadow-lg ${iconWrapperColor}`}>
+                <Icon size={24} strokeWidth={3} />
             </div>
-            <p className="text-sm font-bold flex-1">{message}</p>
-            <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-full transition-colors">
-                <X size={16} />
+            <div className="flex flex-col flex-1">
+                <span className="text-[15px] font-black leading-tight">{type === 'success' ? '¡Excelente!' : 'Atención'}</span>
+                <p className="text-[13px] font-medium opacity-80">{message}</p>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-all active:scale-90">
+                <X size={18} />
             </button>
         </div>
     );
