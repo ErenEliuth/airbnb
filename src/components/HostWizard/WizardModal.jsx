@@ -173,15 +173,15 @@ export function WizardModal({ isOpen, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:p-4">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 sm:p-4">
             <div className="bg-white sm:rounded-xl w-full max-w-4xl h-full sm:h-[80vh] flex flex-col overflow-hidden shadow-2xl relative animate-in slide-in-from-bottom-10 duration-300">
 
                 {/* Header */}
-                <header className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <header className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
                     <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition">
                         <X size={20} />
                     </button>
-                    <div className="font-semibold text-lg text-gray-800">Conviértete en anfitrión</div>
+                    <div className="font-bold text-lg text-gray-900">Conviértete en anfitrión</div>
                     <div className="w-9" /> {/* Spacer */}
                 </header>
 
@@ -202,7 +202,10 @@ export function WizardModal({ isOpen, onClose }) {
                 </main>
 
                 {/* Footer */}
-                <footer className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white">
+                <footer
+                    className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white"
+                    style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 16px)' }}
+                >
                     <button
                         onClick={handleBack}
                         disabled={currentStepIndex === 0}
