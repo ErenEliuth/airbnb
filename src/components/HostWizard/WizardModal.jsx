@@ -80,6 +80,10 @@ export function WizardModal({ isOpen, onClose }) {
                 alert('Por favor selecciona las fechas de disponibilidad.');
                 return;
             }
+            if (new Date(formData.available_to) < new Date(formData.available_from)) {
+                alert('La fecha de fin no puede ser anterior a la fecha de inicio.');
+                return;
+            }
         }
 
         if (isLastStep) {
