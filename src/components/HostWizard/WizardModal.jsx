@@ -1,7 +1,26 @@
-import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { X, ChevronLeft } from 'lucide-react';
+import { X, ChevronLeft, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+
+function Toast({ message, type, onClose }) {
+    const colors = {
+        success: 'bg-green-50 border-green-200 text-green-800 shadow-green-100',
+        error: 'bg-red-50 border-red-200 text-red-800 shadow-red-100',
+        warning: 'bg-amber-50 border-amber-200 text-amber-800 shadow-amber-100',
+    };
+    const Icon = type === 'success' ? CheckCircle2 : (type === 'error' ? X : AlertCircle);
+    const iconColor = type === 'success' ? 'text-green-500' : (type === 'error' ? 'text-red-500' : 'text-amber-500');
+
+    return (
+        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-3 border rounded-2xl px-6 py-4 shadow-2xl min-w-[320px] animate-in slide-in-from-top-10 duration-500 ${colors[type]}`}>
+            <div className={`p-2 rounded-full bg-white shadow-sm ${iconColor}`}>
+                <Icon size={20} />
+            </div>
+            <p className="text-sm font-bold flex-1">{message}</p>
+            <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-full transition-colors">
+                <X size={16} />
+            </button>
+        </div>
+    );
+}
 
 // Steps
 import { StepCategory } from './StepCategory';
@@ -29,6 +48,14 @@ export function WizardModal({ isOpen, onClose }) {
     const { user } = useAuth();
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [toast, setToast] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        if (type !== 'error') {
+            setTimeout(() => setToast(null), 4000);
+        }
+    };
 
     // Form Data State
     const [formData, setFormData] = useState({
@@ -65,11 +92,11 @@ export function WizardModal({ isOpen, onClose }) {
         // Validation for Step Details (Price)
         if (currentStepId === 'details') {
             if (!formData.price || parseFloat(formData.price) <= 0) {
-                alert('Por favor ingressa un precio válido por noche.');
+                showToast('Por favor ingresa un precio válido por noche.', 'warning');
                 return;
             }
             if (!formData.title.trim()) {
-                alert('Por favor ingresa un título para tu anuncio.');
+                showToast('Por favor ingresa un título para tu anuncio.', 'warning');
                 return;
             }
         }
@@ -77,11 +104,11 @@ export function WizardModal({ isOpen, onClose }) {
         // Validation for Step Availability
         if (currentStepId === 'availability') {
             if (!formData.available_from || !formData.available_to) {
-                alert('Por favor selecciona las fechas de disponibilidad.');
+                showToast('Por favor selecciona las fechas de disponibilidad.', 'warning');
                 return;
             }
             if (new Date(formData.available_to) < new Date(formData.available_from)) {
-                alert('La fecha de fin no puede ser anterior a la fecha de inicio.');
+                showToast('La fecha de fin no puede ser anterior a la fecha de inicio.', 'warning');
                 return;
             }
         }
@@ -157,20 +184,24 @@ export function WizardModal({ isOpen, onClose }) {
             // Dispatch event for other components to refresh (e.g., Home, Profile)
             window.dispatchEvent(new CustomEvent('listing-created'));
 
-            alert('¡Alojamiento creado exitosamente!');
-            onClose();
-            // Reset form
-            setFormData({
-                category: '', property_type: '', room_type: '', city: '', location: '',
-                amenities: [], images: [], title: '', description: '', price: '',
-                available_from: '', available_to: '',
-                lat: null, lng: null, max_guests: 1
-            });
-            setCurrentStepIndex(0);
+            showToast('¡Alojamiento creado exitosamente!', 'success');
+
+            // Wait a bit for the toast to be seen before closing
+            setTimeout(() => {
+                onClose();
+                // Reset form
+                setFormData({
+                    category: '', property_type: '', room_type: '', city: '', location: '',
+                    amenities: [], images: [], title: '', description: '', price: '',
+                    available_from: '', available_to: '',
+                    lat: null, lng: null, max_guests: 1
+                });
+                setCurrentStepIndex(0);
+            }, 1500);
 
         } catch (error) {
             console.error('Error creating listing:', error);
-            alert('Error al crear el alojamiento: ' + error.message);
+            showToast('Error al crear el alojamiento: ' + error.message, 'error');
         } finally {
             setLoading(false);
         }
@@ -178,6 +209,7 @@ export function WizardModal({ isOpen, onClose }) {
 
     return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 sm:p-4">
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
             <div className="bg-white sm:rounded-xl w-full max-w-4xl h-full sm:h-[80vh] flex flex-col overflow-hidden shadow-2xl relative animate-in slide-in-from-bottom-10 duration-300">
 
                 {/* Header */}
