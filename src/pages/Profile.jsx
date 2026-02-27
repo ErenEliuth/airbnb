@@ -6,8 +6,9 @@ import { useSettings } from '../contexts/SettingsContext';
 import {
     Loader2, Plus, Trash2, MapPin, Star, Building2,
     User, Briefcase, Users, ChevronRight, Edit2,
-    MessageSquare, CheckCircle2
+    MessageSquare, CheckCircle2, Globe, LogOut, Settings
 } from 'lucide-react';
+import { LanguageModal } from '../components/LanguageModal';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import { es, enUS, fr } from 'date-fns/locale';
@@ -21,6 +22,8 @@ export function ProfilePage() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isWizardOpen, setIsWizardOpen] = useState(false);
+    const [isLangModalOpen, setIsLangModalOpen] = useState(false);
+    const { signOut } = useAuth();
 
     const dateLocale = language === 'en' ? enUS : language === 'fr' ? fr : es;
 
@@ -142,6 +145,11 @@ export function ProfilePage() {
     const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
     const userInitials = userName.charAt(0).toUpperCase();
 
+    const handleSignOut = async () => {
+        await signOut();
+        navigate('/');
+    };
+
     return (
         <div className="min-h-screen bg-white font-inherit">
             <Navbar />
@@ -185,6 +193,28 @@ export function ProfilePage() {
                                     <Users size={20} className={activeTab === 'connections' ? 'text-[#222222]' : 'text-gray-400'} />
                                 </div>
                                 <span>{t('profile.connections')}</span>
+                            </button>
+
+                            <div className="h-px bg-gray-100 my-4" />
+
+                            <button
+                                onClick={() => setIsLangModalOpen(true)}
+                                className="flex items-center gap-4 px-4 py-4 rounded-xl transition-all font-medium text-left text-gray-500 hover:bg-gray-50"
+                            >
+                                <div className="p-2">
+                                    <Globe size={20} className="text-gray-400" />
+                                </div>
+                                <span>Idioma y moneda</span>
+                            </button>
+
+                            <button
+                                onClick={handleSignOut}
+                                className="flex items-center gap-4 px-4 py-4 rounded-xl transition-all font-medium text-left text-rose-600 hover:bg-rose-50"
+                            >
+                                <div className="p-2">
+                                    <LogOut size={20} className="text-rose-400" />
+                                </div>
+                                <span>Cerrar sesión</span>
                             </button>
                         </nav>
                     </aside>
@@ -357,6 +387,7 @@ export function ProfilePage() {
                 setIsWizardOpen(false);
                 fetchUserListings();
             }} />
+            <LanguageModal isOpen={isLangModalOpen} onClose={() => setIsLangModalOpen(false)} />
         </div>
     );
 }
