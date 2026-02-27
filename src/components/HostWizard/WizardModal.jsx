@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../lib/supabase';
 import { X, ChevronLeft, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 // Cache-busting version: 1.0.2
