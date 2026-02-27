@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -62,6 +62,7 @@ export function ListingDetails() {
     const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
     const [submittingReview, setSubmittingReview] = useState(false);
     const [averageRating, setAverageRating] = useState(0);
+    const calendarRef = useRef(null);
 
     const dateLocale = language === 'en' ? enUS : language === 'fr' ? fr : es;
 
@@ -458,7 +459,7 @@ export function ListingDetails() {
                         </div>
 
                         {/* ── Calendar ── */}
-                        <div className="border-b border-gray-100 pb-10">
+                        <div ref={calendarRef} id="calendar" className="border-b border-gray-100 pb-10 scroll-mt-24">
                             <h2 className="text-2xl font-bold text-[#222222] mb-1">
                                 {nights > 0
                                     ? `${nights} ${t('listing.nights')} en ${listing.city || listing.location}`
@@ -729,11 +730,17 @@ export function ListingDetails() {
                     </div>
                 </div>
                 <button
-                    onClick={handleBooking}
+                    onClick={() => {
+                        if (!dateRange.from || !dateRange.to) {
+                            calendarRef.current?.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            handleBooking();
+                        }
+                    }}
                     disabled={booking || isOwner || !user}
                     className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-7 py-3 rounded-[10px] font-bold text-[15px] shadow-sm active:scale-95 disabled:opacity-50"
                 >
-                    {booking ? <Loader2 size={18} className="animate-spin" /> : 'Ver fechas'}
+                    {booking ? <Loader2 size={18} className="animate-spin" /> : (dateRange.from && dateRange.to ? 'Reservar' : 'Ver fechas')}
                 </button>
             </div>
 
