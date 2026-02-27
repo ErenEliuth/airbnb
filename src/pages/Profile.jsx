@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Navbar } from '../components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -24,11 +24,20 @@ export function ProfilePage() {
     const [isWizardOpen, setIsWizardOpen] = useState(false);
     const [isLangModalOpen, setIsLangModalOpen] = useState(false);
     const { signOut } = useAuth();
+    const contentRef = useRef(null);
 
     const dateLocale = language === 'en' ? enUS : language === 'fr' ? fr : es;
 
     const activeTab = searchParams.get('tab') || 'about';
-    const setActiveTab = (tab) => setSearchParams({ tab });
+    const setActiveTab = (tab) => {
+        setSearchParams({ tab });
+        // Auto scroll to content area on mobile
+        if (window.innerWidth < 1024) {
+            setTimeout(() => {
+                contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    };
 
     useEffect(() => {
         if (!user) {
@@ -220,7 +229,7 @@ export function ProfilePage() {
                     </aside>
 
                     {/* Content Area */}
-                    <div className="flex-1">
+                    <div ref={contentRef} className="flex-1 scroll-mt-24">
 
                         {activeTab === 'about' && (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -318,9 +327,9 @@ export function ProfilePage() {
                                                         e.preventDefault();
                                                         handleDelete(listing.id);
                                                     }}
-                                                    className="absolute top-3 right-3 z-20 bg-white/90 backdrop-blur-md p-2.5 rounded-full shadow-lg text-gray-400 hover:text-[#FF385C] transition-all opacity-0 group-hover:opacity-100 border border-gray-100"
+                                                    className="absolute top-3 right-3 z-20 bg-white/95 backdrop-blur-md p-2.5 rounded-full shadow-lg text-rose-500 md:text-gray-400 hover:text-[#FF385C] transition-all opacity-100 md:opacity-0 group-hover:opacity-100 border border-gray-100"
                                                 >
-                                                    <Trash2 size={16} strokeWidth={2.5} />
+                                                    <Trash2 size={18} strokeWidth={2.5} />
                                                 </button>
 
                                                 <Link to={`/listing/${listing.id}`} className="block">
