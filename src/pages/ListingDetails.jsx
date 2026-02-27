@@ -740,7 +740,7 @@ export function ListingDetails() {
                     disabled={booking || isOwner || !user}
                     className="bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white px-7 py-3 rounded-[10px] font-bold text-[15px] shadow-sm active:scale-95 disabled:opacity-50"
                 >
-                    {booking ? <Loader2 size={18} className="animate-spin" /> : (dateRange.from && dateRange.to ? 'Reservar' : 'Ver fechas')}
+                    {booking ? <Loader2 size={18} className="animate-spin" /> : (dateRange.from && dateRange.to ? 'Confirmar reserva' : 'Ver fechas')}
                 </button>
             </div>
 
