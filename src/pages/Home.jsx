@@ -82,6 +82,17 @@ export function Home() {
         }
     }, [isFilterModalOpen, minPriceFilter, maxPriceFilter, roomTypesFilter]);
 
+    // Handle openFilters param from Navbar
+    useEffect(() => {
+        if (searchParams.get('openFilters') === 'true') {
+            setIsFilterModalOpen(true);
+            // Clean up the URL
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete('openFilters');
+            setSearchParams(newParams, { replace: true });
+        }
+    }, [searchParams]);
+
     const fetchListings = async () => {
         try {
             setLoading(true);

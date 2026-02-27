@@ -173,8 +173,8 @@ export function WizardModal({ isOpen, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:p-4">
+            <div className="bg-white sm:rounded-xl w-full max-w-4xl h-full sm:h-[80vh] flex flex-col overflow-hidden shadow-2xl relative animate-in slide-in-from-bottom-10 duration-300">
 
                 {/* Header */}
                 <header className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">

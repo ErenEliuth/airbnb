@@ -247,17 +247,25 @@ export function Navbar() {
                                         <Search className="text-white" size={14} strokeWidth={3} />
                                     </div>
                                     <div className="flex flex-col flex-1 min-w-0">
-                                        <span className="text-[13px] font-bold text-gray-900 leading-tight truncate">Empieza la búsqueda</span>
-                                        <div className="flex gap-1 text-[10px] text-gray-400 font-medium leading-tight">
-                                            <span>En cualquier lugar</span>
+                                        <span className="text-[14px] font-bold text-gray-900 leading-tight truncate">¿A dónde quieres ir?</span>
+                                        <div className="flex gap-1 text-[11px] text-gray-500 font-medium mt-0.5">
+                                            <span>Cualquier lugar</span>
                                             <span>·</span>
                                             <span>Cualquier semana</span>
                                             <span>·</span>
-                                            <span>Agregar viajeros</span>
+                                            <span>Añade viajeros</span>
                                         </div>
                                     </div>
-                                    <div className="p-2 border border-gray-200 rounded-full bg-white flex-shrink-0 ml-2">
-                                        <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const params = new URLSearchParams(location.search);
+                                            params.set('openFilters', 'true');
+                                            navigate(`${location.pathname}?${params.toString()}`);
+                                        }}
+                                        className="p-2.5 border border-gray-200 rounded-full bg-white flex-shrink-0 ml-2 hover:bg-gray-50 active:scale-90 transition-all cursor-pointer shadow-sm active:shadow-inner"
+                                    >
+                                        <svg viewBox="0 0 16 16" className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" strokeWidth="2.5">
                                             <path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
                                         </svg>
                                     </div>
@@ -265,21 +273,26 @@ export function Navbar() {
                             </div>
 
                             {/* Category tabs */}
-                            <div className="flex items-center gap-0 overflow-x-auto no-scrollbar px-4 pb-2 border-b border-gray-100">
+                            <div className="flex items-center gap-0 overflow-x-auto no-scrollbar px-2 pb-1 bg-white">
                                 {tabs.map(({ id, label, Icon, badge }) => (
                                     <button
                                         key={id}
                                         onClick={() => { setActiveTab(id); if (!isHome) navigate('/'); }}
-                                        className={`relative flex flex-col items-center gap-1 px-5 py-2 flex-shrink-0 border-b-2 transition-all ${activeTab === id
-                                                ? 'border-gray-900 text-gray-900'
-                                                : 'border-transparent text-gray-400'
+                                        className={`relative flex flex-col items-center gap-2 px-6 py-3 flex-shrink-0 transition-all active:scale-95 ${activeTab === id
+                                            ? 'text-gray-900'
+                                            : 'text-gray-500 opacity-60'
                                             }`}
                                     >
-                                        <Icon />
-                                        <span className="text-[10px] font-bold whitespace-nowrap">{label}</span>
+                                        <div className={`transition-transform duration-200 ${activeTab === id ? 'scale-110' : 'scale-100'}`}>
+                                            <Icon />
+                                        </div>
+                                        <span className={`text-[11px] font-bold whitespace-nowrap tracking-tight transition-colors ${activeTab === id ? 'text-black' : 'text-gray-500'}`}>{label}</span>
+                                        {activeTab === id && (
+                                            <div className="absolute bottom-0 left-[20%] right-[20%] h-[2.5px] bg-black rounded-full shadow-sm" />
+                                        )}
                                         {badge && (
-                                            <span className="absolute top-1 right-2 bg-rose-500 text-white text-[7px] font-bold px-1 py-0.5 rounded-full leading-none">
-                                                NOVEDAD
+                                            <span className="absolute top-2 right-3 bg-rose-500 text-white text-[7px] font-black px-1.5 py-0.5 rounded-full leading-none shadow-sm animate-pulse">
+                                                NUEVO
                                             </span>
                                         )}
                                     </button>
